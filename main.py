@@ -5,9 +5,9 @@ import time
 
 start = time.perf_counter()
 
-folder = Path('/Users/victoryan/Downloads/Pdf')
+folder = Path(r"C:\Users\hugoo\Desktop\Pdf\1-10_pages\1_page")
 output_dir = folder / 'txt_outputs'
-output_dir.mkdir(exist_ok=True)
+output_dir.mkdir(parents=True, exist_ok=True)
 
 max_files = 100
 count = 0
