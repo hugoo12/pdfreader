@@ -26,10 +26,10 @@ def extract_pdf_in_parallel(pdf_path, workers=None):
 
 
 if __name__ == "__main__":
-    folder = Path(r'C:\Users\hugoo\Desktop\Pdf\1-10_pages\1_page')
-    output_dir = folder / 'txt_outputs'
+    folder = Path(r'C:\Users\hugoo\Desktop\Pdf\41-inf_pages')
+    output_dir = folder / 'txt_outputs2'
     output_dir.mkdir(parents=True, exist_ok=True)
-    max_files = 100
+    max_files = 350
     count = 0
 
     start_all = time.perf_counter()
@@ -37,7 +37,7 @@ if __name__ == "__main__":
         start = time.perf_counter()
         try:
             text = extract_pdf_in_parallel(pdf_path)
-        except (PdfReadError, ValueError) as e:
+        except (PdfReadError, ValueError, AttributeError) as e:
             print(f"⛔ Skipping {pdf_path.name}: {e}")
             continue
         elapsed = time.perf_counter() - start

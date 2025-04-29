@@ -1,15 +1,27 @@
-from PyPDF2 import PdfReader
-from PyPDF2.errors import PdfReadError
+from pypdf import PdfReader
+from pypdf.errors import PdfReadError
 from pathlib import Path
 import time
 
 start = time.perf_counter()
 
-folder = Path(r"C:\Users\hugoo\Desktop\Pdf\1-10_pages\1_page")
-output_dir = folder / 'txt_outputs'
+
+def safe_extract_all_text(reader):
+    text = []
+    for i, page in enumerate(reader.pages, start=1):
+        try:
+            chunk = page.extract_text() or ""
+        except (PdfReadError, AttributeError) as e:
+            print(f" ⚠️  Skipping page {i} due to parse error: {e!r}")
+            continue
+        text.append(chunk)
+    return "\n".join(text)
+
+folder = Path(r"C:\Users\hugoo\Desktop\Pdf\41-inf_pages")
+output_dir = folder / 'txt_outputs1'
 output_dir.mkdir(parents=True, exist_ok=True)
 
-max_files = 100
+max_files = 350
 count = 0
 
 for pdf_path in folder.glob('*.pdf'):
@@ -19,7 +31,7 @@ for pdf_path in folder.glob('*.pdf'):
         print(f"⛔ Skipping {pdf_path.name}: {e}")
         continue
 
-    text = "".join(p.extract_text() or "" for p in reader.pages)
+    text = safe_extract_all_text(reader)
 
     # build an output filename, e.g. "document.pdf" → "document.txt"
     out_path = output_dir / (pdf_path.stem + '.txt')
